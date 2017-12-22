@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mybatis.onetomany.entity.classMapper">
+	<!--两个表连查onetoone    两种方法  -->
+	<select id="getClass" parameterType="int" resultMap="sanzhangbiao">
+		SELECT * FROM class c,teacher t,student s WHERE c.`teacher_id`=t.`t_id` AND c.`c_id`=s.`class_id` and c.c_id=#{id}
+	</select>
+	<resultMap type="com.mybatis.onetomany.entity.Classes" id="sanzhangbiao">
+		<!-- 班级实体类与表中对应字段 -->
+		<id property="id" column="c_id"/>
+		<result property="name" column="c_name"/>
+		<!-- 老师对象实体类与表中对应字段 -->
+		<association property="teacher" javaType="com.mybatis.onetomany.entity.Teacher">
+			<id property="id" column="t_id"/>
+			<result property="name" column="t_name"/>
+		</association>
+		<!-- 学生集合实体类与表中对应字段  -->
+		<collection property="students" ofType="com.mybatis.onetomany.entity.Student">
+			<id property="id" column="s_id"/>
+			<result property="name" column="s_name"/>
+		</collection>
+	</resultMap>
+	
+	
+	
+	<!-- <select id="getClass2" parameterType="int" resultMap="ClassResultMap2">
+		select * from class where c_id=#{id}
+	</select>
+	<resultMap type="com.mybatis.onetoone.entity.Classes" id="ClassResultMap2">
+		<id property="id" column="c_id"/>
+		<result property="name" column="c_name"/>
+		association解决一对一的关联查询  Property：对象属性的名称    javaType：对象属性的类型   
+		 				Column：所对应的外键字段名称     Select：使用另一个查询封装的结果
+		<association property="teacher" column="teacher_id" select="getTeacher"/>
+	</resultMap>
+	<select id="getTeacher" parameterType="int" resultType="com.mybatis.onetoone.entity.Teacher">
+		SELECT t_id id, t_name name FROM teacher WHERE t_id=#{id}
+	</select> -->
+</mapper>
